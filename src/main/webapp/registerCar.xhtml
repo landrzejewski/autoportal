@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="template.xhtml">
+
+    <ui:define name="mainContent">
+        <h1>#{text.registerCar_title}</h1>
+        <h:form id="carForm">
+            <div class="form-group">
+                <label for="make">#{text.car_make}</label>
+                <h:inputText id="make" value="#{carRegistration.car.make}" class="form-control" required="true"/>
+                <h:message for="make" class="error"/>
+            </div>
+            <div class="form-group">
+                <label for="model">#{text.car_model}</label>
+                <h:inputText id="model" value="#{carRegistration.car.model}" class="form-control" required="true"/>
+                <h:message for="model" class="error"/>
+            </div>
+            <div class="form-group">
+                <label for="productionYear">#{text.car_productionYear}</label>
+                <h:inputText id="productionYear" value="#{carRegistration.car.productionYear}" class="form-control" required="true">
+                    <f:validateLongRange minimum="#{configuration.minCarProductionYear}" maximum="#{configuration.maxCarProductionYear}"/>
+                </h:inputText>
+                <h:message for="productionYear" class="error"/>
+            </div>
+            <div class="form-group">
+                <label for="firstRegistration">#{text.car_firstRegistration} (#{configuration.datePattern.toLowerCase()})</label>
+                <h:inputText id="firstRegistration" value="#{carRegistration.car.firstRegistration}" class="form-control" required="true">
+                    <f:convertDateTime pattern="#{configuration.datePattern}"/>
+                </h:inputText>
+                <h:message for="firstRegistration" class="error"/>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <h:selectBooleanCheckbox id="damaged" value="#{carRegistration.car.damaged}" class="checkbox"/>
+                    #{text.car_damaged}
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="controls">
+                    <label for="engineType" class="control-label">#{text.car_engineType}</label>
+                    <h:selectOneMenu id="engineType" value="#{carRegistration.car.engineType}" class="form-control combo">
+                        <f:selectItem itemLabel="#{text.car_engineType_PETROL}" itemValue="PETROL"/>
+                        <f:selectItem itemLabel="#{text.car_engineType_DIESEL}" itemValue="DIESEL"/>
+                        <f:selectItem itemLabel="#{text.car_engineType_ELECTRIC}" itemValue="ELECTRIC"/>
+                    </h:selectOneMenu>
+                </div>
+            </div>
+            <h:commandButton class="btn btn-default" value="#{text.save}" action="#{carRegistration.save}"/>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

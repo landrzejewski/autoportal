@@ -1,0 +1,16 @@
+.mainContainer {
+    margin-top: 60px;
+}
+
+.error {
+    display: block;
+    margin-top: 10px;
+    padding: 6px 10px;
+    background: rgba(255, 75, 63, 0.36);
+    border: 1px solid #ae3c00;
+    border-radius: 5px;
+}
+
+.combo {
+    height: 34px !important;
+}

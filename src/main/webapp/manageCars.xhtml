@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="template.xhtml">
+
+    <ui:define name="mainContent">
+        <h1>#{text.manageCars_title}</h1>
+        <h:form id="carsForm">
+            <div class="form-group">
+                <div class="controls">
+                    <label for="filterType" class="control-label">#{text.manageCars_filter}</label>
+                    <h:selectOneMenu id="filterType" valueChangeListener="#{carsManager.changeFilterType}" class="form-control combo">
+                        <f:selectItem itemLabel="#{text.car_make}" itemValue="make"/>
+                        <f:selectItem itemLabel="#{text.car_model}" itemValue="model"/>
+                        <f:selectItem itemLabel="#{text.car_productionYear}" itemValue="productionYear"/>
+                    </h:selectOneMenu>
+                    <h:inputText id="filterValue" valueChangeListener="#{carsManager.changeFilterValue}" class="form-control">
+                        <f:ajax render="cars" event="keyup" listener="#{carsManager.filter}"/>
+                    </h:inputText>
+                </div>
+            </div>
+            <h:panelGroup id="cars">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#{text.car_make}</th>
+                    <th>#{text.car_model}</th>
+                    <th>#{text.car_productionYear}</th>
+                    <th>#{text.car_firstRegistration}</th>
+                    <th>#{text.car_damaged}</th>
+                    <th>#{text.car_engineType}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <ui:repeat value="#{carsManager.tableRows}" var="tableRow">
+                    <tr>
+                        <td>
+                            <h:outputText value="#{tableRow.car.make}" rendered="#{!tableRow.edited}"/>
+                            <h:inputText value="#{tableRow.car.make}" class="form-control" rendered="#{tableRow.edited}"/>
+                        </td>
+                        <td>
+                            <h:outputText value="#{tableRow.car.model}" rendered="#{!tableRow.edited}"/>
+                            <h:inputText value="#{tableRow.car.model}" class="form-control" rendered="#{tableRow.edited}"/>
+                        </td>
+                        <td>
+                            <h:outputText value="#{tableRow.car.productionYear}" rendered="#{!tableRow.edited}"/>
+                            <h:inputText value="#{tableRow.car.productionYear}" class="form-control" rendered="#{tableRow.edited}" />
+                        </td>
+                        <td>
+                            <h:outputText value="#{tableRow.car.firstRegistration}" rendered="#{!tableRow.edited}">
+                                <f:convertDateTime pattern="#{configuration.datePattern}"/>
+                            </h:outputText>
+                            <h:inputText value="#{tableRow.car.firstRegistration}" class="form-control" rendered="#{tableRow.edited}">
+                                <f:convertDateTime pattern="#{configuration.datePattern}"/>
+                            </h:inputText>
+                        </td>
+                        <td>
+                            <h:outputText value="#{tableRow.car.damaged ? text.yes : text.no}" rendered="#{!tableRow.edited}"/>
+                            <div class="checkbox">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{tableRow.car.damaged}" class="checkbox"  rendered="#{tableRow.edited}"/>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <h:outputText value="#{text['car_engineType_'.concat(tableRow.car.engineType)]}" rendered="#{!tableRow.edited}"/>
+                            <h:selectOneMenu value="#{tableRow.car.engineType}" class="form-control combo" rendered="#{tableRow.edited}">
+                                <f:selectItem itemLabel="#{text.car_engineType_PETROL}" itemValue="PETROL"/>
+                                <f:selectItem itemLabel="#{text.car_engineType_DIESEL}" itemValue="DIESEL"/>
+                                <f:selectItem itemLabel="#{text.car_engineType_ELECTRIC}" itemValue="ELECTRIC"/>
+                            </h:selectOneMenu>
+                        </td>
+                        <td>
+                            <h:commandLink action="#{carsManager.deleteRow(tableRow)}">
+                                <f:ajax render="carsForm cars"/>
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </h:commandLink>
+                            <h:commandLink action="#{carsManager.editRow(tableRow)}">
+                                <f:ajax render="carsForm cars"/>
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </h:commandLink>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+            </h:panelGroup>
+            <h:commandButton class="btn btn-default" value="#{text.save}" action="#{carsManager.save}" rendered="#{carsManager.editMode}">
+                <f:ajax render="carsForm" execute="carsForm"/>
+            </h:commandButton>
+        </h:form>
+    </ui:define>
+</ui:composition>
